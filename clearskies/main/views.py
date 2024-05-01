@@ -3,25 +3,68 @@ import json
 import urllib.request
 import urllib.parse
 from .utils import calculate_feels_like  # Import the function to calculate feels like temperature
+from pychartjs import BaseChart, ChartType, Color
+
+API_KEY = '638f32faed524313d58727ce950d0e20'
+
+class MyLineChart(BaseChart):
+    type = ChartType.Line
 
 def index(request):
     if request.method == 'POST':
         city = request.POST['city']
-        url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=638f32faed524313d58727ce950d0e20'
-        url = urllib.parse.quote(url, safe=':/?&=')
-        source = urllib.request.urlopen(url).read()
-        list_of_data = json.loads(source)
-        temperature = float(list_of_data['main']['temp']) - 273.15  # Convert temperature to Celsius
-        humidity = float(list_of_data['main']['humidity']) / 100.0  # Convert humidity to decimal
-        wind_speed = float(list_of_data.get('wind', {}).get('speed', 0)) * 3.6  # Convert wind speed to km/h
+        # Get current weather data
+        current_url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}'
+        current_url = urllib.parse.quote(current_url, safe=':/?&=')
+        current_source = urllib.request.urlopen(current_url).read()
+        current_data = json.loads(current_source)
+
+        # Process current weather data
+        temperature = float(current_data['main']['temp']) - 273.15  # Convert temperature to Celsius
+        humidity = float(current_data['main']['humidity']) / 100.0  # Convert humidity to decimal
+        wind_speed = float(current_data.get('wind', {}).get('speed', 0)) * 3.6  # Convert wind speed to km/h
         feels_like = calculate_feels_like(temperature, humidity, wind_speed)
+
+        # Get forecast data for the next 5 days
+        forecast_url = f'http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}'
+        forecast_url = urllib.parse.quote(forecast_url, safe=':/?&=')
+        forecast_source = urllib.request.urlopen(forecast_url).read()
+        forecast_data = json.loads(forecast_source)
+
+        # Process forecast data
+        date_labels = []  # List to store date labels for x-axis
+        temperature_values = []  # List to store temperature values for y-axis
+        humidity_values = []  # List to store humidity values for y-axis
+        for item in forecast_data['list']:
+            # Extract date, temperature, and humidity from forecast data
+            date_labels.append(item['dt_txt'])  # Assuming 'dt_txt' contains date information
+            temperature_values.append(float(item['main']['temp'] - 273.15))  # Convert temperature to Celsius
+            humidity_values.append(float(item['main']['humidity'] / 100.0))  # Convert humidity to decimal
+
+        # Create line charts
+        temperature_chart = MyLineChart()
+        temperature_chart.data.labels = date_labels
+        temperature_chart.data.datasets = [{
+            'label': 'Temperature (°C)',
+            'data': temperature_values,
+            'borderColor': Color.Red
+        }]
+
+        humidity_chart = MyLineChart()
+        humidity_chart.data.labels = date_labels
+        humidity_chart.data.datasets = [{
+            'label': 'Humidity (%)',
+            'data': humidity_values,
+            'borderColor': Color.Blue
+        }]
+
+        temperature_chart_json = temperature_chart.get()
+        humidity_chart_json = humidity_chart.get()
+
         data = {
-            "country_code": str(list_of_data['sys']['country']),
-            "coordinate": str(list_of_data['coord']['lon']) + ' ' + str(list_of_data['coord']['lat']),
-            "temp": str(temperature) + '°C',
-            "feels_like": str(feels_like) + '°C',
-            "pressure": str(list_of_data['main']['pressure']),
-            "humidity": str(list_of_data['main']['humidity']),
+            "temperature_chart_json": temperature_chart_json,
+            "humidity_chart_json": humidity_chart_json,
+            "feels_like": str(feels_like) + '°C'
         }
         print(data)
     else:
