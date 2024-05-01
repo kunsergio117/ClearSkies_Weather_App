@@ -1,0 +1,45 @@
+/* Body */
+body {
+    background-color: powderblue; /* Background color for the body */
+    color: #333; /* Text color */
+}
+
+/* Header */
+h1 {
+    color: royalblue; /* Header text color */
+}
+
+/* Form */
+.form-control {
+    background-color: whitesmoke; /* Background color for input fields */
+    color: #333; /* Text color for input fields */
+}
+
+/* Button */
+.btn-primary {
+    background-color: #007bff; /* Background color for primary buttons */
+    color: #fff; /* Text color for primary buttons */
+}
+
+/* Charts */
+canvas {
+    background-color: powderblue; /* Background color for charts */
+}
+.feels-like {
+    background-color: royalblue;
+    border-radius: 10px; /* Rounded corners */
+    margin: 20px;
+    border: 30px solid royalblue;
+}
+.feels-like h2 {
+    color: ghostwhite;
+    font-size: 30px;
+    font-family: Georgia, serif;
+}
+.feels-like p {
+    color: white;
+}
+
+#welcome {
+    font-size: 20px;
+}
