@@ -7,8 +7,10 @@ from pychartjs import BaseChart, ChartType, Color
 
 API_KEY = '638f32faed524313d58727ce950d0e20'
 
+
 class MyLineChart(BaseChart):
     type = ChartType.Line
+
 
 def index(request):
     if request.method == 'POST':
@@ -35,11 +37,11 @@ def index(request):
         date_labels = []  # List to store date labels for x-axis
         temperature_values = []  # List to store temperature values for y-axis
         humidity_values = []  # List to store humidity values for y-axis
-        for item in forecast_data['list']:
+        for item in range(5):
             # Extract date, temperature, and humidity from forecast data
-            date_labels.append(item['dt_txt'])  # Assuming 'dt_txt' contains date information
-            temperature_values.append(float(item['main']['temp'] - 273.15))  # Convert temperature to Celsius
-            humidity_values.append(float(item['main']['humidity'] / 100.0))  # Convert humidity to decimal
+            date_labels.append(forecast_data['list'][item]['dt_txt'])  # Assuming 'dt_txt' contains date information
+            temperature_values.append(float(forecast_data['list'][item]['main']['temp'] - 273.15))  # Convert temperature to Celsius
+            humidity_values.append(float(forecast_data['list'][item]['main']['humidity'] / 100.0))  # Convert humidity to decimal
 
         # Create line charts
         temperature_chart = MyLineChart()
