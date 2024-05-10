@@ -7,30 +7,19 @@ from pychartjs import ChartType, Color
 
 API_KEY = '638f32faed524313d58727ce950d0e20'
 
-
 def index(request):
     if request.method == 'POST':
         city = request.POST['city']
-        units = request.POST.get('units', 'metric')  # Get selected units
-
         # Get current weather data
         current_url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}'
         current_url = urllib.parse.quote(current_url, safe=':/?&=')
         current_source = urllib.request.urlopen(current_url).read()
         current_data = json.loads(current_source)
 
-        # Process current weather data based on metric or imperial
-        units_multiplier = 1 if units == 'metric' else (5 / 9)  # For temperature conversion in Celsius or Fahrenheit
-        units_speed_multiplier = 1 if units == 'metric' else 0.44704  # For wind speed conversion in m/s or mph
-
-        temperature_kelvin = current_data['main']['temp']
-        temperature = (temperature_kelvin - 273.15) * units_multiplier  # Convert temperature to Celsius or Fahrenheit
-
+        # Process current weather data
+        temperature = float(current_data['main']['temp']) - 273.15  # Convert temperature to Celsius
         humidity = float(current_data['main']['humidity']) / 100.0  # Convert humidity to decimal
-
-        wind_speed_mps = float(current_data.get('wind', {}).get('speed', 0))
-        wind_speed = wind_speed_mps * units_speed_multiplier  # Convert wind speed to m/s or mph
-        # in-house feels like calculation
+        wind_speed = float(current_data.get('wind', {}).get('speed', 0)) * 3.6  # Convert wind speed to km/h
         feels_like = calculate_feels_like(temperature, humidity, wind_speed)
 
         # Get forecast data for the next 5 days
@@ -77,7 +66,7 @@ def index(request):
             "feels_like": str(feels_like) + '°C'
         }
         # Debugging step: Print the data before passing it to the template
-        # print(data)
+        print(data)
     else:
         data = {}
     return render(request, "main/index.html", data)
