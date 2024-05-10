@@ -43,3 +43,12 @@ canvas {
 #welcome {
     font-size: 20px;
 }
+.welcome { text-align: center}
+/*.chart-container {*/
+/*    width: 100%; !* Set the width to 100% of the parent container (browser window) *!*/
+/*    height: 100%; !* Set the height to 100% of the parent container (browser window) *!*/
+/*}*/
+/*.col-md-6 {*/
+/*    width: 100%; !* Set the width to 100% of the parent container (browser window) *!*/
+/*    height: 100%;*/
+/*}*/

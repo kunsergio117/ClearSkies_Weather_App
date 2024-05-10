@@ -1,16 +1,11 @@
-from django.shortcuts import render
 import json
+from django.shortcuts import render
 import urllib.request
 import urllib.parse
 from .utils import calculate_feels_like  # Import the function to calculate feels like temperature
-from pychartjs import BaseChart, ChartType, Color
+from pychartjs import ChartType, Color
 
 API_KEY = '638f32faed524313d58727ce950d0e20'
-
-
-class MyLineChart(BaseChart):
-    type = ChartType.Line
-
 
 def index(request):
     if request.method == 'POST':
@@ -37,37 +32,40 @@ def index(request):
         date_labels = []  # List to store date labels for x-axis
         temperature_values = []  # List to store temperature values for y-axis
         humidity_values = []  # List to store humidity values for y-axis
-        for item in range(5):
+        for item in range(10):
             # Extract date, temperature, and humidity from forecast data
             date_labels.append(forecast_data['list'][item]['dt_txt'])  # Assuming 'dt_txt' contains date information
             temperature_values.append(float(forecast_data['list'][item]['main']['temp'] - 273.15))  # Convert temperature to Celsius
             humidity_values.append(float(forecast_data['list'][item]['main']['humidity'] / 100.0))  # Convert humidity to decimal
 
-        # Create line charts
-        temperature_chart = MyLineChart()
-        temperature_chart.data.labels = date_labels
-        temperature_chart.data.datasets = [{
-            'label': 'Temperature (°C)',
-            'data': temperature_values,
-            'borderColor': Color.Red
-        }]
+        # Create JSON data for temperature chart
+        temperature_chart_data = {
+            "labels": date_labels,
+            "datasets": [{
+                'label': 'Temperature (°C)',
+                'data': temperature_values,
+                'borderColor': Color.Red
+            }]
+        }
+        temperature_chart_json = json.dumps(temperature_chart_data)
 
-        humidity_chart = MyLineChart()
-        humidity_chart.data.labels = date_labels
-        humidity_chart.data.datasets = [{
-            'label': 'Humidity (%)',
-            'data': humidity_values,
-            'borderColor': Color.Blue
-        }]
-
-        temperature_chart_json = temperature_chart.get()
-        humidity_chart_json = humidity_chart.get()
+        # Create JSON data for humidity chart
+        humidity_chart_data = {
+            "labels": date_labels,
+            "datasets": [{
+                'label': 'Humidity (%)',
+                'data': humidity_values,
+                'borderColor': Color.Blue
+            }]
+        }
+        humidity_chart_json = json.dumps(humidity_chart_data)
 
         data = {
             "temperature_chart_json": temperature_chart_json,
             "humidity_chart_json": humidity_chart_json,
             "feels_like": str(feels_like) + '°C'
         }
+        # Debugging step: Print the data before passing it to the template
         print(data)
     else:
         data = {}
