@@ -42,6 +42,11 @@
             {% if temperature_chart_json and humidity_chart_json %}
             <div class="col-md-6">
                 <h3 class="text-center">3-hourly Forecast</h3>
+                <div class="btn-group" role="group" aria-label="Unit selection">
+                    <button type="button" class="btn btn-default" onclick="changeUnits('metric')">Metric</button>
+                    <button type="button" class="btn btn-default" onclick="changeUnits('imperial')">Imperial</button>
+                </div>
+                <br>
                 <div class="chart-container">
                     <canvas id="temperatureChart" width="1000px" height="400px"></canvas>
                 </div>
@@ -56,59 +61,68 @@
 
     <!-- JavaScript for rendering charts -->
     <script>
-    const temperatureData = {{ temperature_chart_json|safe }};
-    const humidityData = {{ humidity_chart_json|safe }};
+        function changeUnits(units) {
+            // Send an AJAX request to the server to update units
+            // You'll need to handle this in your Django view
+            // Example: $.post('/update_units/', {units: units});
 
-    // Render Temperature chart
-    const temperatureCtx = document.getElementById('temperatureChart');
-    new Chart(temperatureCtx, {
-        type: 'line',
-        data: temperatureData,
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
+            // For now, let's just log the selected units
+            console.log('Selected units:', units);
+        }
+
+        const temperatureData = {{ temperature_chart_json|safe }};
+        const humidityData = {{ humidity_chart_json|safe }};
+
+        // Render Temperature chart
+        const temperatureCtx = document.getElementById('temperatureChart');
+        new Chart(temperatureCtx, {
+            type: 'line',
+            data: temperatureData,
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date, Time'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)'
+                        }
                     }
                 },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Temperature (°C)'
-                    }
-                }
-            },
-            responsive: true, // Make the chart responsive
-            maintainAspectRatio: false // Optionally, allow aspect ratio adjustment
-        }
-    });
+                responsive: true, // Make the chart responsive
+                maintainAspectRatio: false // Optionally, allow aspect ratio adjustment
+            }
+        });
 
-    // Render Humidity chart
-    const humidityCtx = document.getElementById('humidityChart');
-    new Chart(humidityCtx, {
-        type: 'line',
-        data: humidityData,
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
+        // Render Humidity chart
+        const humidityCtx = document.getElementById('humidityChart');
+        new Chart(humidityCtx, {
+            type: 'line',
+            data: humidityData,
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Humidity (%)'
+                        }
                     }
                 },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Humidity (%)'
-                    }
-                }
-            },
-            responsive: true, // Make the chart responsive
-            maintainAspectRatio: false // Optionally, allow aspect ratio adjustment
-        }
-    });
-</script>
+                responsive: true, // Make the chart responsive
+                maintainAspectRatio: false // Optionally, allow aspect ratio adjustment
+            }
+        });
+    </script>
 
 
 </body>
