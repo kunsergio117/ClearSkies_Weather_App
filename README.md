@@ -1,9 +1,10 @@
-### INF601 - Advanced Programming in Python
 ### Sergio Gabriel Jiawei Kun
 ### Final_project
 
 ## Description
-Prototype Openweather API DJango web application. Currently contains a working forecast dashboard for temperature and humidity in the searched city or location in metric measurements. In the future there will be imperial units options and map oriented dashboards.
+Prototype Openweather API DJango web application. Currently contains a working forecast dashboard for temperature and humidity in the searched city or location in metric measurements and a blog post based on geographical location for users to interact.
+In the future there will be imperial units options and map oriented dashboards.
+
 ## Getting Started
 
 ### pip install instructions
@@ -16,6 +17,7 @@ pip install -r requirements.txt
 ### Dependencies
 
 * This version was developed using Python 3.11, and will run best in this version.
+* Other languages: html, Javascript, CSS
 
 ### Installing
 * Python 3.11
