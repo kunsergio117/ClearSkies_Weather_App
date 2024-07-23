@@ -24,11 +24,14 @@ pip install -r requirements.txt
 Run the following in the bash terminal
 ```
 pip install -r requirements.txt
+** This next line is to ensure you are in the final_project_SergioGabrielJiaweiKun/clearskies directory before continuing **
+cd clearskies
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser (this will create the administrator login for your /admin side of your project)
 
-python manage.py runserver (This brings your web application up)
+(This next line brings your web application up and running)
+python manage.py runserver
 ```
 Once running, you should be able to see the web application run in:
 http://127.0.0.1:8000/

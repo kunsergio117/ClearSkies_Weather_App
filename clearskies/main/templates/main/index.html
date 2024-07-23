@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'main/styles.css' %}">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 </head>
 <body>
     <div class="container">
@@ -29,6 +30,8 @@
                 </form>
             </div>
         </div>
+        <button id="toggleUnitsBtn" class="btn btn-secondary" onclick="toggleUnits()">Change Between Imperial or Metric units</button>
+        <p id="currentUnits">Current Units: Metric</p> 
 
         <div class="row">
             <div class="col-md-3">
