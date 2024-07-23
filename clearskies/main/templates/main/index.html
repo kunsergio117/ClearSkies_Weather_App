@@ -42,11 +42,15 @@
                 </div>
             </div>
 
-            {% if temperature_chart_json and humidity_chart_json %}
+            {% if temperature_chart_json_celsius and temperature_chart_json_fahrenheit and humidity_chart_json %}
             <div class="col-md-6">
                 <h3 class="text-center">3-hourly Forecast (up to 30 hours)</h3>
                 <div class="chart-container">
-                    <canvas id="temperatureChart" width="1000px" height="400px"></canvas>
+                    <canvas id="temperatureChartCelsius" width="1000px" height="400px"></canvas>
+                </div>
+                <br>
+                <div class="chart-container">
+                    <canvas id="temperatureChartFahrenheit" width="1000" height="400"></canvas>
                 </div>
                 <br>
                 <div class="chart-container">
@@ -59,14 +63,16 @@
 
     <!-- JavaScript for rendering charts -->
     <script>
-    const temperatureData = {{ temperature_chart_json|safe }};
+    const temperatureDataCelsius = {{ temperature_chart_json_celsius|safe }};
+    const temperatureDataFahrenheit = {{ temperature_chart_json_fahrenheit|safe }};
+
     const humidityData = {{ humidity_chart_json|safe }};
 
-    // Render Temperature chart
-    const temperatureCtx = document.getElementById('temperatureChart');
-    new Chart(temperatureCtx, {
+    // Render Temperature charts in Celsius and Fahrenheit
+    const temperatureCtxCelsius = document.getElementById('temperatureChartCelsius');
+    new Chart(temperatureCtxCelsius, {
         type: 'line',
-        data: temperatureData,
+        data: temperatureDataCelsius,
         options: {
             scales: {
                 x: {
@@ -82,8 +88,32 @@
                     }
                 }
             },
-            responsive: true, // Make the chart responsive
-            maintainAspectRatio: false // Optionally, allow aspect ratio adjustment
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    const temperatureCtxFahrenheit = document.getElementById('temperatureChartFahrenheit');
+    new Chart(temperatureCtxFahrenheit, {
+        type: 'line',
+        data: temperatureDataFahrenheit,
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Temperature (°F)'
+                    }
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 
@@ -112,6 +142,7 @@
         }
     });
 </script>
+
 
 
 </body>

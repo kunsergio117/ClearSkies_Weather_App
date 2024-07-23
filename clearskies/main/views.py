@@ -53,14 +53,33 @@ def index(request):
             temperature_values.append(temp_val)
             humidity_values.append(float(forecast_data['list'][item]['main']['humidity']) / 100.0)
 
-        temperature_chart_data = {
+
+        # Convert temperature values to Fahrenheit if the selected unit is imperial
+        if unit == 'imperial':
+            temperature_values_fahrenheit = [convert_to_imperial(temp_val) for temp_val in temperature_values]
+        else:
+            temperature_values_fahrenheit = temperature_values  # Keep the data as Celsius if metric
+
+        # Temperature chart data for Celsius
+        temperature_chart_data_celsius = {
             'labels': date_labels,
             'datasets': [{
-                'label': f'Temperature ({temp_unit})',
+                'label': 'Temperature (°C)',
                 'data': temperature_values,
-                'borderColor': Color.Red
+                'borderColor': 'rgba(75, 192, 192, 1)'
             }]
         }
+
+        # Temperature chart data for Fahrenheit
+        temperature_chart_data_fahrenheit = {
+            'labels': date_labels,
+            'datasets': [{
+                'label': 'Temperature (°F)',
+                'data': temperature_values_fahrenheit,
+                'borderColor': 'rgba(255, 99, 132, 1)'
+            }]
+        }
+
 
         humidity_chart_data = {
             'labels': date_labels,
@@ -71,11 +90,13 @@ def index(request):
             }]
         }
 
-        temperature_chart_json = json.dumps(temperature_chart_data)
+        temperature_chart_json_celsius = json.dumps(temperature_chart_data_celsius)
+        temperature_chart_json_fahrenheit = json.dumps(temperature_chart_data_fahrenheit)
         humidity_chart_json = json.dumps(humidity_chart_data)
 
         data = {
-            'temperature_chart_json': temperature_chart_json,
+            'temperature_chart_json_celsius': temperature_chart_json_celsius,
+            'temperature_chart_json_fahrenheit': temperature_chart_json_fahrenheit,
             'humidity_chart_json': humidity_chart_json,
             'feels_like': f'{feels_like:.2f}{temp_unit}'
         }

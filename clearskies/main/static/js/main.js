@@ -21,7 +21,7 @@ function toggleUnits() {
     const feelsValue = parseInt(feelsLikeElement.textContent); // Parse the feels like value
 
     if (!isNaN(feelsValue)) {
-        if (currentUnits.innerText === 'Current Units: Metric') {
+        if (currentUnits.innerText === 'Current Units: Imperial') {
             // Switch to Imperial Units
             const fahrenheit = CelsiusToFahrenheit(feelsValue);
             feelsLikeElement.textContent = Math.round(fahrenheit) + " °F";
