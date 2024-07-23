@@ -59,6 +59,34 @@
             </div>
             {% endif %}
         </div>
+
+        <!-- Blog Section -->
+        <div id="blog-section">
+            <h2>Blog Posts</h2>
+            <div id="blog-posts">
+                {% for post in posts %}
+                <div class="blog-post">
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.content }}</p>
+                    <p>Posted on: {{ post.created_at }}</p>
+                </div>
+                {% empty %}
+                <p>No blog posts available.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Blog Post Form -->
+            <h3>Write a New Post</h3>
+            <form id="blog-post-form" method="post">
+                {% csrf_token %}
+                <input type="text" id="post-title" class="form-control" placeholder="Title" required><br>
+                <textarea id="post-content" class="form-control" placeholder="Content" required></textarea><br>
+                <input type="hidden" id="post-location">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+
     </div>
 
     <!-- JavaScript for rendering charts -->
